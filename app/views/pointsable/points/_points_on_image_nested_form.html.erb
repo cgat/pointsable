@@ -1,0 +1,15 @@
+<script>
+$(document).ready(function () {
+  createPointsImg("points_container", <%= width %>, <%= height %>, <%= scale %>, '<%= image_url %>', <%= draggable %>, <%= points.to_json.html_safe %>)
+});
+</script>
+<div id="points_container"></div>
+<div id="sub_form">
+  <%= f.fields_for :points do |builder| %>
+    <fieldset class="<%= builder.object.label %>">
+      <%= builder.hidden_field :x %>
+      <%= builder.hidden_field :y %>
+    </fieldset>
+  <% end %>
+</div>
+

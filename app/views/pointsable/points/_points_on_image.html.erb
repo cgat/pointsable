@@ -1,0 +1,7 @@
+<script>
+
+$(document).ready(function () {
+  createPointsImg("points_container", <%= width %>, <%= height %>, <%= scale %>, '<%= image_url %>', <%= draggable %>, <%= points.to_json.html_safe %>)
+});
+</script>
+<div id="points_container"></div>

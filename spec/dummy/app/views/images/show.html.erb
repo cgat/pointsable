@@ -1,0 +1,11 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Image:</b>
+  <%= @image.image %>
+  <%= render 'pointsable/points/points_on_image.html.erb', width: 800, height: 600, scale: 800.0/1400, image_url: @image.image, points: @image.points, draggable: false %>
+</p>
+
+
+<%= link_to 'Edit', edit_image_path(@image) %> |
+<%= link_to 'Back', images_path %>
