@@ -13,5 +13,5 @@
 //= require jquery
 //= require jquery_ujs
 //= require kinetic-v4.5.4
-//= require pointsable/points
+//= require pointsable/Pointsable
 //= require_tree .

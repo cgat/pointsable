@@ -1,6 +1,6 @@
 function createPointsImg(container, width, height, scale, image_url, draggable, points) {
       var stage = new Kinetic.Stage({
-        container: 'points_container',
+        container: container,
         width: width,
         height: height
       });

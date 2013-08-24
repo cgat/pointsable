@@ -1,15 +1,62 @@
-<script>
+<script type="text/javascript">
 $(document).ready(function () {
-  createPointsImg("points_container", <%= width %>, <%= height %>, <%= scale %>, '<%= image_url %>', <%= draggable %>, <%= points.to_json.html_safe %>)
+  p = new Pointsable(<%= options.to_json.html_safe %>)
+  /* before submitting, we update the input fields associated
+  with the points to reflect their new coordinates */
+  $('input[type="submit"]').on('click', function() {
+    for (var i = 0; i<p.kineticPoints.length; i++) {
+      var label = p.kineticPoints[i].getId();
+      $('fieldset.'+label+' input:nth-child(1)').val(p.realPoints[i].x);
+      $('fieldset.'+label+' input:nth-child(2)').val(p.realPoints[i].y);
+    }
+  });
+  var addPointWithFields = function addPointWithFields(){
+    //
+    var time = new Date().getTime()
+    var template = $('div#point_fields_template').data('fields');
+    var lastPointLabel = $("div#sub_form > fieldset").last().attr("class");
+    if (!lastPointLabel) {
+      lastPointLabel = "p0";
+    }
+    var newPointLabel = "p"+(parseInt(lastPointLabel.replace("p",""))+1);
+    var regexpLabel = new RegExp("TMP_LABEL", 'g');
+    template = template.replace(regexpLabel, newPointLabel);
+    var regexpNestedId = new RegExp($('div#point_fields_template').data('id'), 'g');
+    template = template.replace(regexpNestedId, time);
+    $('div#sub_form').append(template);
+
+    //and the new point to the Poinstable stage.
+    var newPoint = {
+      x: 10,
+      y: 10,
+      label: newPointLabel
+    };
+    p.addPoint(newPoint);
+  }
+  $('input[name="add_point"]').on('click', function() {
+    addPointWithFields();
+  });
+  var removePointWithField = function removePointWithField() {
+    if(p.selectedPoint) {
+      selectedPointLabel = p.selectedPoint.getId();
+      p.removePoint(selectedPointLabel);
+      $("fieldset[class='"+selectedPointLabel+"'] > input[class='destroy']").val('1');
+    }
+  };
+  $('input[name="remove_point"]').on('click', function() {
+    removePointWithField();
+  });
 });
 </script>
-<div id="points_container"></div>
+<div id="<%= options[:container] %>"></div>
+<div class="pointsable_buttons">
+  <input type="button" name="add_point" value="Add Point">
+  <input type="button" name="remove_point" value="Remove Point">
+</div>
+<%= point_fields_template(f) %>
 <div id="sub_form">
   <%= f.fields_for :points do |builder| %>
-    <fieldset class="<%= builder.object.label %>">
-      <%= builder.hidden_field :x %>
-      <%= builder.hidden_field :y %>
-    </fieldset>
+    <%= render 'pointsable/points/point_fields', builder: builder if builder.object.label!="TMP_LABEL" %>
   <% end %>
 </div>
 

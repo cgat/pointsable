@@ -7,5 +7,9 @@ module Pointsable
       g.assets false
       g.helper false
     end
+    initializer "pointsable view helpers" do |app|
+     ActionView::Base.send :include, PointsableHelper
+   end
   end
+
 end

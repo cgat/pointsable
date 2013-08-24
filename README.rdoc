@@ -1,3 +1,44 @@
 = Pointsable
 
-This project rocks and uses MIT-LICENSE.
+Pointsable is a rails engine that allows you to easily add, save, and edit reference points on an image. It uses html5 canvas with kinetic.js.
+
+Base Features
+*add and delete as many points to an image as you want
+*supports multiple pointsable canvases in the same page
+*numbered point labels
+
+To use in your application
+
+Run the pointsable generator. This will create a db table that tracks all your points.
+rails generate pointsable::install
+
+Make a model pointsable by adding "pointsable" in the model class.
+Example
+class Image < ActiveRecord::Base
+  acts_as_poinstable url_method: <url_method>
+end
+
+To show your image on a page with points (assuming your image has points) add:
+<%= pointsable_show(@image, viewport_width) %>
+To add and edit points on your image:
+<%= forms_for @image do %>
+  <%= pointsable_form(@image, viewport_width, form_builder: <f>) %>
+<% end %>
+
+
+class PointsableImage ->
+  members points array of circles, stage or canvas
+  constructor: (something)
+    #build the canvas
+
+  add_point()
+
+  remove_point(point_num)
+
+  best way to pass variables from rails to coffeescript
+
+D
+
+
+
+MIT-LICENSE.
