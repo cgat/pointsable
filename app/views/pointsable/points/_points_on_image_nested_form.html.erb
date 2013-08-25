@@ -16,6 +16,7 @@ $(document).ready(function () {
     var template = $('div#point_fields_template').data('fields');
     var lastPointLabel = $("div#sub_form > fieldset").last().attr("class");
     if (!lastPointLabel) {
+      //if there is no points, start with a label p0
       lastPointLabel = "p0";
     }
     var newPointLabel = "p"+(parseInt(lastPointLabel.replace("p",""))+1);
