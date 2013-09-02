@@ -1,6 +1,6 @@
 <script type="text/javascript">
 $(document).ready(function () {
-  p = new Pointsable(<%= options.to_json.html_safe %>)
+  var p = new Pointsable(<%= options.to_json.html_safe %>)
   /* before submitting, we update the input fields associated
   with the points to reflect their new coordinates */
   $('input[type="submit"]').on('click', function() {

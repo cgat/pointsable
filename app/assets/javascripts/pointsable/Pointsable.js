@@ -68,7 +68,7 @@
           this.add(this.circle);
           },
       zoom : function(scale){
-          this.circle.setFillPatternScale(config.scale);
+          this.circle.setFillPatternScale(scale);
       }
     };
 
@@ -126,6 +126,9 @@ var Pointsable = (function() {
         draggable: this.draggable,
         realPoint: point
       });
+      if (this.kineticPoints.length===0) {
+         this.magnify.zoom(1/((kpoint.circle.getRadius()/this.stage.getWidth())*(this.imageJs.width/this.magnify.circle.getRadius())));
+      }
       this.kineticPoints.push(kpoint);
       this.pointsLayer.add(kpoint);
       kpoint.on('dragmove', updateRealPoint.bind(kpoint,point,this.scale));
@@ -201,7 +204,6 @@ var Pointsable = (function() {
         imageOffsetX: _this.magnifyRadius/_this.scale,
         imageOffsetY: _this.magnifyRadius/_this.scale,
       });
-      console.log(_this.magnify);
       if (_this.selectedPoint) {
         _this.magnify.circle.setFillPatternOffset(_this.selectedPoint.realPoint.x, _this.selectedPoint.realPoint.y);
         _this.magnify.circle.setFillPatternScale( 1/((_this.selectedPoint.circle.getRadius()/_this.stage.getWidth())*(_this.imageJs.width/_this.magnify.circle.getRadius())) );
