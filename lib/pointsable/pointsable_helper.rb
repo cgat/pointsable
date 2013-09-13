@@ -1,14 +1,24 @@
 module Pointsable
   module PointsableHelper
-    def pointsable_show(object, viewing_width)
+    def pointsable_show(object, options)
+      options.reverse_merge!({container: "poinstable_container_#{object.class.name}_#{object.id}",
+                                          image_url: object.pointsable_url,
+                                          points: object.points,
+                                          draggable: false})
       render partial: 'pointsable/points/points_on_image',
-                locals: {options: {container: "poinstable_container_#{object.class.name}_#{object.id}", viewingWidth: viewing_width, imageUrl: object.pointsable_url, points: object.points, draggable: false}}
+                locals: {options: options}
     end
 
-    def pointsable_form(object, viewing_width, form_builder, controls_options={} )
-      controls_options.reverse_merge!({add_points: true, remove_points: true})
+    def pointsable_form(object, form_builder, options={} )
+      options.reverse_merge!({container: "poinstable_container_#{object.class.name}_#{object.id}",
+                                          image_url: object.pointsable_url,
+                                          points: object.points,
+                                          draggable: true,
+                                          add_points_widget: true,
+                                          remove_points_widget: true})
+      raise ArgumentError, "The viewing_width parameter is required" unless options.has_key?(:viewing_width)
       render partial: 'pointsable/points/points_on_image_nested_form',
-                locals: {f: form_builder, controls: controls_options, options: {container: "poinstable_container_#{object.class.name}_#{object.id}", viewingWidth: viewing_width, imageUrl: object.pointsable_url, points: object.points, draggable: true}}
+                locals: {f: form_builder, options: options}
     end
 
     def point_fields_template(form_builder)

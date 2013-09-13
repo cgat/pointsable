@@ -1,6 +1,6 @@
 <script type="text/javascript">
 $(document).ready(function () {
-  window['<%= options[:container] %>'] = new Pointsable(<%= options.to_json.html_safe %>);
+  window['<%= options[:container] %>'] = new Pointsable(<%= options.camelize_keys.to_json.html_safe %>);
   var p = window['<%= options[:container] %>'];
   /* before submitting, we update the input fields associated
   with the points to reflect their new coordinates */
@@ -52,10 +52,10 @@ $(document).ready(function () {
 </script>
 <div id="<%= options[:container] %>"></div>
 <div class="pointsable_buttons">
-  <% if controls[:add_points] %>
+  <% if options[:add_points_widget] %>
     <input type="button" name="add_point" value="Add Point">
   <% end %>
-  <% if controls[:remove_points] %>
+  <% if options[:remove_points_widget] %>
     <input type="button" name="remove_point" value="Remove Point">
   <% end %>
 </div>

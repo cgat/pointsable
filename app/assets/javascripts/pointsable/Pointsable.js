@@ -211,7 +211,7 @@ var Pointsable = (function() {
       }
       _this.magnifyLayer.add(_this.magnify);
       _this.stage.add(_this.magnifyLayer);
-      //_this.pointsLayer.moveToTop();
+      $.event.trigger(o.container+"_loaded");
     };
     _this.imageJs.src = _this.imageUrl;
   };
