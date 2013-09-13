@@ -126,7 +126,8 @@ var Pointsable = (function() {
         draggable: this.draggable,
         realPoint: point
       });
-      if (this.kineticPoints.length===0) {
+      //setup the zoom scale for the magnify object if this is the first point being added && a magnifier already exists
+      if (this.kineticPoints.length===0 && this.magnify) {
          this.magnify.zoom(1/((kpoint.circle.getRadius()/this.stage.getWidth())*(this.imageJs.width/this.magnify.circle.getRadius())));
       }
       this.kineticPoints.push(kpoint);

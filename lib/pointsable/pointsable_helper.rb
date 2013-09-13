@@ -1,13 +1,14 @@
 module Pointsable
   module PointsableHelper
     def pointsable_show(object, viewing_width)
-      render partial: 'pointsable/points/points_on_image.html.erb',
-                locals: {options: {container: "poinstable_container_#{object.id}", viewingWidth: viewing_width, imageUrl: object.pointsable_url, points: object.points, draggable: false}}
+      render partial: 'pointsable/points/points_on_image',
+                locals: {options: {container: "poinstable_container_#{object.class.name}_#{object.id}", viewingWidth: viewing_width, imageUrl: object.pointsable_url, points: object.points, draggable: false}}
     end
 
-    def pointsable_form(object, viewing_width, form_builder)
+    def pointsable_form(object, viewing_width, form_builder, controls_options={} )
+      controls_options.reverse_merge!({add_points: true, remove_points: true})
       render partial: 'pointsable/points/points_on_image_nested_form',
-                locals: {f: form_builder, options: {container: "poinstable_container_#{object.id}", viewingWidth: viewing_width, imageUrl: object.pointsable_url, points: object.points, draggable: true}}
+                locals: {f: form_builder, controls: controls_options, options: {container: "poinstable_container_#{object.class.name}_#{object.id}", viewingWidth: viewing_width, imageUrl: object.pointsable_url, points: object.points, draggable: true}}
     end
 
     def point_fields_template(form_builder)

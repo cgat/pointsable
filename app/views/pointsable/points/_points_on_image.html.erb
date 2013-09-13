@@ -1,6 +1,6 @@
 <script type="text/javascript">
 $(document).ready(function () {
-  var p = new Pointsable(<%= options.to_json.html_safe %>)
+  window['<%= options[:container] %>'] = new Pointsable(<%= options.to_json.html_safe %>)
 });
 </script>
 <div id="<%= options[:container] %>"></div>
