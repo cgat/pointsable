@@ -118,6 +118,17 @@ var Pointsable = (function() {
   };
 
   addPoint = function addPoint(point) {
+      if (!point.label) {
+        if (this.realPoints.length==0) {
+          point.label = "p1";
+        }
+        else {
+          var currLast = this.realPoints[this.realPoints.length-1].label;
+          //increment the integer value of the last point on the points array and
+          //use that number as the basis of the new point label
+          point.label = "p"+(parseInt(currLast.replace("p",""))+1);
+        }
+      }
       kpoint = new Kinetic.Point({
         x: point.x*this.scale,
         y: point.y*this.scale,
@@ -137,6 +148,7 @@ var Pointsable = (function() {
       kpoint.on('mousedown', updateSelectedPoint.bind(kpoint,this));
       this.realPoints.push(point);
       this.pointsLayer.draw();
+      $('#'+this.container).trigger("pointAdded", point);
   }
 
   removePoint = function removePoint(label){
@@ -160,7 +172,9 @@ var Pointsable = (function() {
       this.realPoints.splice(rRemoveIndex,1);
     }
     this.pointsLayer.draw();
+    $.event.trigger("pointRemoved");
   }
+
 
   //constructor
   function Poinstable(options) {
@@ -179,6 +193,7 @@ var Pointsable = (function() {
     _this.kineticPoints = [];
     _this.realPoints = [];
     _this.viewingWidth = o.viewingWidth;
+    _this.container = o.container;
     _this.imageJs.onload = function setupStage(){
       if(o.viewingWidth) {
         _this.scale = _this.viewingWidth/_this.imageJs.width;

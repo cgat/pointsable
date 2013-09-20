@@ -11,32 +11,22 @@ $(document).ready(function () {
       $('fieldset.'+label+' input:nth-child(2)').val(p.realPoints[i].y);
     }
   });
-  var addPointWithFields = function addPointWithFields(){
-    //
-    var time = new Date().getTime()
-    var template = $('div#point_fields_template').data('fields');
-    var lastPointLabel = $("div#sub_form > fieldset").last().attr("class");
-    if (!lastPointLabel) {
-      //if there is no points, start with a label p0
-      lastPointLabel = "p0";
+  var addPointFormFields = function addPointFormFields(point){
+    if (!$('div#<%= options[:container] %>_sub_form .'+point.label)) {
+      var time = new Date().getTime()
+      var template = $('div#point_fields_template').data('fields');
+      var regexpLabel = new RegExp("TMP_LABEL", 'g');
+      template = template.replace(regexpLabel, point.label);
+      var regexpNestedId = new RegExp($('div#point_fields_template').data('id'), 'g');
+      template = template.replace(regexpNestedId, time);
+      $('div#<%= options[:container] %>_sub_form').append(template);
     }
-    var newPointLabel = "p"+(parseInt(lastPointLabel.replace("p",""))+1);
-    var regexpLabel = new RegExp("TMP_LABEL", 'g');
-    template = template.replace(regexpLabel, newPointLabel);
-    var regexpNestedId = new RegExp($('div#point_fields_template').data('id'), 'g');
-    template = template.replace(regexpNestedId, time);
-    $('div#sub_form').append(template);
-
-    //and the new point to the Poinstable stage.
-    var newPoint = {
-      x: 10,
-      y: 10,
-      label: newPointLabel
-    };
-    p.addPoint(newPoint);
   }
   $('input[name="add_point"]').on('click', function() {
-    addPointWithFields();
+    p.addPoint({ x: 50, y: 50 })
+  });
+  $('#<%= options[:container] %>').on('pointAdded', function(e,point) {
+    addPointFormFields(point);
   });
   var removePointWithField = function removePointWithField() {
     if(p.selectedPoint) {
@@ -60,7 +50,7 @@ $(document).ready(function () {
   <% end %>
 </div>
 <%= point_fields_template(f) %>
-<div id="sub_form">
+<div id="<%= options[:container] %>_sub_form">
   <%= f.fields_for :points do |builder| %>
     <%= render 'pointsable/points/point_fields', builder: builder if builder.object.label!="TMP_LABEL" %>
   <% end %>
