@@ -86,7 +86,8 @@ var Pointsable = (function() {
     },
     addPoints,
     addPoint,
-    removePoint;
+    removePoint,
+    movePoint;
 
   /**** event handlers ****/
   var updateRealPoint = function updateRealPoint(point,scale) {
@@ -175,9 +176,27 @@ var Pointsable = (function() {
     $.event.trigger("pointRemoved");
   }
 
+  movePoint = function movePoint(index, coord, coord_system) {
+    coord_system = typeof coord_system !== 'undefined' ? coord_system : "canvas";
+    var kpoint = this.kineticPoints[index];
+    if (coord_system==="full_image") {
+      kpoint.setX(Math.round(coord.x*this.scale));
+      kpoint.setY(Math.round(coord.y*this.scale));
+      kpoint.realPoint.x = coord.x;
+      kpoint.realPoint.y = coord.y;
+    }
+    else {
+      kpoint.setX(coord.x);
+      kpoint.setY(coord.y);
+      kpoint.realPoint.x = coord.x/this.scale;
+      kpoint.realPoint.y = coord.y/this.scale;
+    }
+    this.stage.draw();
+  }
+
 
   //constructor
-  function Poinstable(options) {
+  function Pointsable(options) {
     var o = jQuery.extend({}, default_options, options || {}),
                 _this = this;
     _this.imageUrl = o.imageUrl;
@@ -231,11 +250,12 @@ var Pointsable = (function() {
     _this.imageJs.src = _this.imageUrl;
   };
 
-  Poinstable.prototype.addPoints = addPoints;
-  Poinstable.prototype.addPoint =  addPoint;
-  Poinstable.prototype.removePoint = removePoint;
+  Pointsable.prototype.addPoints = addPoints;
+  Pointsable.prototype.addPoint =  addPoint;
+  Pointsable.prototype.removePoint = removePoint;
+  Pointsable.prototype.movePoint = movePoint;
 
-  return Poinstable;
+  return Pointsable;
 })();
 
 

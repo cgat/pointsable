@@ -21,14 +21,15 @@ module Pointsable
                 locals: {f: form_builder, options: options}
     end
 
-    def point_fields_template(form_builder)
+    def point_fields_template(form_builder, container_name)
+      raise ArgumentError, "A container_name must be given" if container_name.blank?
       new_point = form_builder.object.points.new
       new_point.label = "TMP_LABEL"
       id = new_point.object_id
       fields = form_builder.fields_for(:points, new_point, child_index: id) do |builder|
         render("pointsable/points/point_fields", builder: builder)
       end
-      content_tag(:div, nil, data: {id: id, fields: fields.gsub("\n","")}, id: "point_fields_template").html_safe
+      content_tag(:div, nil, data: {id: id, fields: fields.gsub("\n","")}, id: "#{container_name}_fields_template").html_safe
     end
   end
 end

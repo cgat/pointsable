@@ -15,7 +15,7 @@
     <%= f.label :image %><br />
     <%= f.text_field :image %>
   </div>
-  <%= pointsable_form(@image, 800, f) %>
+  <%= pointsable_form(@image, f, viewing_width: 800) %>
   <div class="actions">
     <%= f.submit %>
   </div>

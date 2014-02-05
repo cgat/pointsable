@@ -7,17 +7,19 @@ $(document).ready(function () {
   $('input[type="submit"]').on('click', function() {
     for (var i = 0; i<p.kineticPoints.length; i++) {
       var label = p.kineticPoints[i].getId();
-      $('fieldset.'+label+' input:nth-child(1)').val(p.realPoints[i].x);
-      $('fieldset.'+label+' input:nth-child(2)').val(p.realPoints[i].y);
+      var sub_form = $("#"+p.container+'_sub_form');
+      sub_form.find('fieldset.'+label+' input:nth-child(1)').val(p.realPoints[i].x);
+      sub_form.find('fieldset.'+label+' input:nth-child(2)').val(p.realPoints[i].y);
     }
   });
   var addPointFormFields = function addPointFormFields(point){
-    if (!$('div#<%= options[:container] %>_sub_form .'+point.label)) {
+    if ($('div#<%= options[:container] %>_sub_form .'+point.label).length==0) {
       var time = new Date().getTime()
-      var template = $('div#point_fields_template').data('fields');
+      var templateDiv = $('div#'+p.container+'_fields_template');
+      var template = templateDiv.data('fields');
       var regexpLabel = new RegExp("TMP_LABEL", 'g');
       template = template.replace(regexpLabel, point.label);
-      var regexpNestedId = new RegExp($('div#point_fields_template').data('id'), 'g');
+      var regexpNestedId = new RegExp(templateDiv.data('id'), 'g');
       template = template.replace(regexpNestedId, time);
       $('div#<%= options[:container] %>_sub_form').append(template);
     }
@@ -49,7 +51,7 @@ $(document).ready(function () {
     <input type="button" name="remove_point" value="Remove Point">
   <% end %>
 </div>
-<%= point_fields_template(f) %>
+<%= point_fields_template(f, options[:container]) %>
 <div id="<%= options[:container] %>_sub_form">
   <%= f.fields_for :points do |builder| %>
     <%= render 'pointsable/points/point_fields', builder: builder if builder.object.label!="TMP_LABEL" %>
