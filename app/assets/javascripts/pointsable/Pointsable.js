@@ -9,9 +9,7 @@
           this.circle = new Kinetic.Circle({
             x: 0,
             y: 0,
-            radius: 20,
-            stroke: 'red',
-            strokeWidth: 2
+            radius: 10
           });
           this.label = new Kinetic.Text({
               x: this.circle.getRadius(),
@@ -22,16 +20,43 @@
               padding: 0,
               fill: 'yellow'
             });
+          this.lineTop = new Kinetic.Line({
+            points: [0, -this.circle.getRadius(), 0, -this.circle.getRadius()/10],
+            stroke: 'red',
+            strokeWidth: 2
+          });
+          this.lineBottom = new Kinetic.Line({
+            points: [0, this.circle.getRadius(), 0, this.circle.getRadius()/10],
+            stroke: 'red',
+            strokeWidth: 2
+          });
+          this.lineRight = new Kinetic.Line({
+            points: [this.circle.getRadius(), 0, this.circle.getRadius()/10, 0],
+            stroke: 'red',
+            strokeWidth: 2
+          });
+          this.lineLeft = new Kinetic.Line({
+            points: [-this.circle.getRadius(), 0, -this.circle.getRadius()/10, 0],
+            stroke: 'red',
+            strokeWidth: 2
+          });
           this.realPoint = config.realPoint;
           Kinetic.Group.call(this, config);
           this.add(this.label);
           this.add(this.circle);
+          this.add(this.lineTop);
+          this.add(this.lineBottom);
+          this.add(this.lineRight);
+          this.add(this.lineLeft);
           },
       setFill : function(arg){
           this.circle.setFill(arg);
       },
       setStroke : function(arg){
-        this.circle.setStroke(arg);
+        this.lineTop.setStroke(arg);
+        this.lineBottom.setStroke(arg);
+        this.lineRight.setStroke(arg);
+        this.lineLeft.setStroke(arg);
       }
     };
 
