@@ -4,7 +4,7 @@
 <% @images.each do |image| %>
 
     <%= image.image %>
-    <%= pointsable_show(image, 800) %>
+    <%= pointsable_show(image, viewing_width: 800) %>
     <%= link_to 'Show', image %>
     <%= link_to 'Edit', edit_image_path(image) %>
 <% end %>
