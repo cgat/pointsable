@@ -4,7 +4,8 @@ module Pointsable
       options.reverse_merge!({container: "poinstable_container_#{object.class.name}_#{object.id}",
                                           image_url: object.pointsable_url,
                                           points: object.points,
-                                          draggable: false})
+                                          draggable: false,
+                                          points_scale_factor: 1})
       render partial: 'pointsable/points/points_on_image',
                 locals: {options: options}
     end
@@ -15,7 +16,8 @@ module Pointsable
                                           points: object.points,
                                           draggable: true,
                                           add_points_widget: true,
-                                          remove_points_widget: true})
+                                          remove_points_widget: true,
+                                          points_scale_factor: 1})
       raise ArgumentError, "The viewing_width parameter is required" unless options.has_key?(:viewing_width)
       render partial: 'pointsable/points/points_on_image_nested_form',
                 locals: {f: form_builder, options: options}

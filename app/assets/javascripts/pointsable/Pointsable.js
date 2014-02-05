@@ -157,7 +157,7 @@ var Pointsable = (function() {
     }
   }
   var updateMagnify = function updateMagnify(pointsableObj) {
-    pointsableObj.magnify.circle.setFillPatternOffset(this.realPoint.x, this.realPoint.y);
+    pointsableObj.magnify.circle.setFillPatternOffset(this.realPoint.x*pointsableObj.pointsScaleFactor, this.realPoint.y*pointsableObj.pointsScaleFactor);
     pointsableObj.magnifyLayer.draw();
   }
   /** end  of event handlers **/
@@ -181,8 +181,8 @@ var Pointsable = (function() {
         }
       }
       kpoint = new Kinetic.Point({
-        x: point.x*this.scale,
-        y: point.y*this.scale,
+        x: point.x*this.pointsScaleFactor*this.viewportScale,
+        y: point.y*this.pointsScaleFactor*this.viewportScale,
         id: point.label,
         label: point.label,
         draggable: this.draggable,
@@ -194,7 +194,7 @@ var Pointsable = (function() {
       }
       this.kineticPoints.push(kpoint);
       this.pointsLayer.add(kpoint);
-      kpoint.on('dragmove', updateRealPoint.bind(kpoint,point,this.scale));
+      kpoint.on('dragmove', updateRealPoint.bind(kpoint,point,this.viewportScale*this.pointsScaleFactor));
       kpoint.on('dragmove mousedown', updateMagnify.bind(kpoint,this));
       kpoint.on('mousedown', updateSelectedPoint.bind(kpoint,this));
       this.realPoints.push(point);
@@ -230,16 +230,16 @@ var Pointsable = (function() {
     coord_system = typeof coord_system !== 'undefined' ? coord_system : "canvas";
     var kpoint = this.kineticPoints[index];
     if (coord_system==="full_image") {
-      kpoint.setX(Math.round(coord.x*this.scale));
-      kpoint.setY(Math.round(coord.y*this.scale));
+      kpoint.setX(Math.round(coord.x*this.pointsScaleFactor*this.viewportScale));
+      kpoint.setY(Math.round(coord.y*this.pointsScaleFactor*this.viewportScale));
       kpoint.realPoint.x = coord.x;
       kpoint.realPoint.y = coord.y;
     }
     else {
       kpoint.setX(coord.x);
       kpoint.setY(coord.y);
-      kpoint.realPoint.x = coord.x/this.scale;
-      kpoint.realPoint.y = coord.y/this.scale;
+      kpoint.realPoint.x = coord.x/(this.viewportScale*this.pointsScaleFactor);
+      kpoint.realPoint.y = coord.y/(this.viewportScale*this.pointsScaleFactor);
     }
     this.stage.draw();
   }
@@ -256,6 +256,7 @@ var Pointsable = (function() {
     _this.magnifyLayer = new Kinetic.Layer();
     _this.controlsLayer = new Kinetic.Layer();
     _this.draggable = o.draggable
+    _this.pointsScaleFactor = o.pointsScaleFactor;
     _this.selectedPoint = null;
     _this.magnifyRadius = o.magnifyRadius;
     //both real and kinetic points are built when addPoints is activated
@@ -265,16 +266,16 @@ var Pointsable = (function() {
     _this.container = o.container;
     _this.imageJs.onload = function setupStage(){
       if(o.viewingWidth) {
-        _this.scale = _this.viewingWidth/_this.imageJs.width;
+        _this.viewportScale = _this.viewingWidth/_this.imageJs.width;
       }
       _this.stage = new Kinetic.Stage({
         container: o.container,
-        width: _this.imageJs.width*_this.scale,
-        height: _this.imageJs.height*_this.scale
+        width: _this.imageJs.width*_this.viewportScale,
+        height: _this.imageJs.height*_this.viewportScale
       });
       var imgBackground = new Kinetic.Image({
         image: _this.imageJs,
-        scale: _this.scale
+        scale: _this.viewportScale
       });
       _this.imageLayer.add(imgBackground);
       _this.stage.add(_this.imageLayer);
@@ -288,8 +289,8 @@ var Pointsable = (function() {
         circleStrokeWidth: 2,
         x: _this.stage.getWidth()-_this.magnifyRadius-5,
         y: _this.stage.getHeight()-_this.magnifyRadius-5,
-        imageOffsetX: _this.magnifyRadius/_this.scale,
-        imageOffsetY: _this.magnifyRadius/_this.scale,
+        imageOffsetX: _this.magnifyRadius/_this.viewportScale,
+        imageOffsetY: _this.magnifyRadius/_this.viewportScale,
       });
       if (_this.selectedPoint) {
         _this.magnify.circle.setFillPatternOffset(_this.selectedPoint.realPoint.x, _this.selectedPoint.realPoint.y);
