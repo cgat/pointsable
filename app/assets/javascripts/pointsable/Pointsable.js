@@ -64,8 +64,33 @@
           this.circle.setFillPatternImage(config.image);
           this.circle.setFillPatternOffset(config.imageOffsetX,config.imageOffsetY);
           this.circle.setFillPatternScale(config.scale);
+          //[this.circle.getX(), this.circle.getY()-this.circle.radius, this.circle.getX(), this.circle.getY()-10],
+          this.lineTop = new Kinetic.Line({
+            points: [0, -config.radius, 0, -10],
+            stroke: 'black',
+            strokeWidth: 4
+          });
+          this.lineBottom = new Kinetic.Line({
+            points: [0, config.radius, 0, 10],
+            stroke: 'black',
+            strokeWidth: 4
+          });
+          this.lineRight = new Kinetic.Line({
+            points: [config.radius, 0, 10, 0],
+            stroke: 'black',
+            strokeWidth: 4
+          });
+          this.lineLeft = new Kinetic.Line({
+            points: [-config.radius, 0, -10, 0],
+            stroke: 'black',
+            strokeWidth: 4
+          });
           Kinetic.Group.call(this, config);
           this.add(this.circle);
+          this.add(this.lineTop);
+          this.add(this.lineBottom);
+          this.add(this.lineRight);
+          this.add(this.lineLeft);
           },
       zoom : function(scale){
           this.circle.setFillPatternScale(scale);
@@ -234,6 +259,8 @@ var Pointsable = (function() {
       _this.magnify = new Kinetic.Magnify({
         image: _this.imageJs,
         radius: _this.magnifyRadius,
+        circleStroke: 'black',
+        circleStrokeWidth: 1,
         x: _this.stage.getWidth()-_this.magnifyRadius-5,
         y: _this.stage.getHeight()-_this.magnifyRadius-5,
         imageOffsetX: _this.magnifyRadius/_this.scale,
